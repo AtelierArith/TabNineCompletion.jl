@@ -1,6 +1,6 @@
 # TabnineCompletion.jl
 
-Tabnine client for Julia REPL 
+Tabnine client for Julia REPL
 
 ## Usage
 
@@ -56,3 +56,4 @@ julia> @inittabnine!
 
 julia> using Bench # Press <TAB> here
 ```
+

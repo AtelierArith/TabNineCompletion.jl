@@ -34,8 +34,8 @@ function get_tabnine_path()
     translation = Dict(
         ("linux", "x32") => "i686-unknown-linux-musl/TabNine",
         ("linux", "x64") => "x86_64-unknown-linux-musl/TabNine",
-        ("osx", "x32")   => "i686-apple-darwin/TabNine",
-        ("osx", "x64")   => "x86_64-apple-darwin/TabNine",
+        ("osx", "x32") => "i686-apple-darwin/TabNine",
+        ("osx", "x64") => "x86_64-apple-darwin/TabNine",
         ("osx", "arm64") => "aarch64-apple-darwin/TabNine",
         ("windows", "x32") => "i686-pc-windows-gnu/TabNine.exe",
         ("windows", "x64") => "x86_64-pc-windows-gnu/TabNine.exe",
@@ -46,7 +46,7 @@ function get_tabnine_path()
 
 
     active_path = joinpath(pkgdir(@__MODULE__)::String, "binaries")
-    v = sort(VersionNumber.(readdir(active_path)), rev=true) |> first |> string
+    v = sort(VersionNumber.(readdir(active_path)), rev = true) |> first |> string
     path = joinpath(active_path, v, platform)
     return path
 end
@@ -55,7 +55,7 @@ struct TabNineClient
     process::Base.Process
 end
 
-function TabNineClient(tnpath::AbstractString=get_tabnine_path())
+function TabNineClient(tnpath::AbstractString = get_tabnine_path())
     # https://discourse.julialang.org/t/how-to-continuously-communicate-with-an-external-program/86319/2
     inp = Base.PipeEndpoint()
     out = Base.PipeEndpoint()
