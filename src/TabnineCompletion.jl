@@ -1,4 +1,4 @@
-module TabnineCompletion
+module TabNineCompletion
 
 export @inittabnine!
 
@@ -142,4 +142,4 @@ macro inittabnine!()
     end
 end
 
-end # module TabnineCompletion
+end # module TabNineCompletion
