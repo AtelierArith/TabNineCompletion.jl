@@ -1,4 +1,4 @@
-name = "TabnineCompletion"
+name = "TabNineCompletion"
 uuid = "f046959a-9064-4034-ba4e-3bce031b6da2"
 authors = ["SatoshiTerasaki <terasakisatoshi.math@gmail.com>"]
 version = "0.1.0"
