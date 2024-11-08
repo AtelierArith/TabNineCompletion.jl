@@ -44,8 +44,7 @@ function get_tabnine_path()
     platform_key = (get_platform(), get_arch())
     platform = translation[platform_key]
 
-
-    active_path = joinpath(pkgdir(@__MODULE__)::String, "binaries")
+    active_path = joinpath(pkgdir(@__MODULE__)::String, "deps", "binaries")
     v = sort(VersionNumber.(readdir(active_path)), rev = true) |> first |> string
     path = joinpath(active_path, v, platform)
     return path
