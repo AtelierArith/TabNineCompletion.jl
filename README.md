@@ -1,4 +1,4 @@
-# TabnineCompletion.jl
+# TabNineCompletion.jl
 
 Tabnine client for Julia REPL
 
@@ -11,8 +11,8 @@ Tabnine client for Julia REPL
 ### Clone this repository
 
 ```sh
-$ git clone https://github.com/AtelierArith/TabnineCompletion.jl.git
-$ cd TabnineCompletion.jl
+$ git clone https://github.com/AtelierArith/TabNineCompletion.jl.git
+$ cd TabNineCompletion.jl
 ```
 
 ### Resolve dependencies
@@ -26,7 +26,7 @@ $ julia -e 'using Pkg; Pkg.activate("."); Pkg.build()'
 ### Call `@inittabnine!`
 
 ```julia-repl
-julia> using TabnineCompletion
+julia> using TabNineCompletion
 
 julia> @inittabnine!
 
