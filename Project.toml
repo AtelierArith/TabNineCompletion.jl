@@ -1,0 +1,12 @@
+name = "TabnineCompletion"
+uuid = "f046959a-9064-4034-ba4e-3bce031b6da2"
+authors = ["SatoshiTerasaki <terasakisatoshi.math@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
+
+[compat]
+JSON = "0.21.4"
+REPL = "1.11.0"
