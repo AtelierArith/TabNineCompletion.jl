@@ -54,11 +54,12 @@ struct TabNineClient
     process::Base.Process
 end
 
-function TabNineClient(tnpath::AbstractString = get_tabnine_path())
+function TabNineClient(tnpath::AbstractString)
     # https://discourse.julialang.org/t/how-to-continuously-communicate-with-an-external-program/86319/2
     inp = Base.PipeEndpoint()
     out = Base.PipeEndpoint()
     err = Base.PipeEndpoint()
+    @assert isfile(tnpath)
     c = `$(tnpath)`
 
     tabnineproc = run(c, inp, out, err, wait = false)
@@ -86,7 +87,9 @@ function send(client::TabNineClient, req::Dict)
 end
 
 macro inittabnine!()
-    tabnineclient[] = TabNineClient()
+    tabninepath = Base.contractuser(get_tabnine_path())
+    @info "Launch tabnine process..." tabninepath
+    tabnineclient[] = TabNineClient(expanduser(tabninepath))
     @eval begin
         # Override the default REPL.REPLCompletions.completions function
         function REPL.REPLCompletions.completions(
@@ -97,15 +100,16 @@ macro inittabnine!()
             hint::Bool = false,
         )
             before = string[1:pos]
+            # @info "userinput" before
             after = ""
-            # filename = joinpath(Base.DEPOT_PATH[1], "logs", "repl_history.jl")
-            filename = nothing
+            filename = joinpath(Base.DEPOT_PATH[1], "logs", "repl_history.jl")
+            #filename = nothing
             req = Dict(
                 "Autocomplete" => Dict(
                     "before" => rstrip(before),
                     "after" => strip(after),
-                    "region_includes_beginning" => true,
-                    "region_includes_end" => true,
+                    "region_includes_beginning" => false,
+                    "region_includes_end" => false,
                     "filename" => filename,
                     "max_num_results" => 5,
                 ),
@@ -119,6 +123,7 @@ macro inittabnine!()
                 end
             end
 
+            # @info "predict" res
             if isempty(res)
                 (REPL.REPLCompletions.Completion[], 1:0, true)
             else
