@@ -102,14 +102,14 @@ macro inittabnine!()
             before = string[1:pos]
             # @info "userinput" before
             after = ""
-            filename = joinpath(Base.DEPOT_PATH[1], "logs", "repl_history.jl")
-            #filename = nothing
+            #filename = joinpath(Base.DEPOT_PATH[1], "logs", "repl_history.jl")
+            filename = nothing
             req = Dict(
                 "Autocomplete" => Dict(
                     "before" => rstrip(before),
                     "after" => strip(after),
-                    "region_includes_beginning" => false,
-                    "region_includes_end" => false,
+                    "region_includes_beginning" => true,
+                    "region_includes_end" => true,
                     "filename" => filename,
                     "max_num_results" => 5,
                 ),
