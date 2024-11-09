@@ -72,8 +72,8 @@ function send(client::TabNineClient, req::Dict)
     inputd = Dict("version" => "2.0.2", "request" => req)
 
     write(client.process, JSON.json(inputd) * "\n")
-    outputjson = JSON.parse(readuntil(client.process, "\n"))
-    details = map(outputjson["results"]) do o
+    outputjson = JSON.parse(readuntil(client.process, "\n"))::Dict{String, Any}
+    details = map(outputjson["results"]::Vector) do o
         m = match(r"(\d+)", o["detail"])
         if isnothing(m)
             p = 0
@@ -83,7 +83,7 @@ function send(client::TabNineClient, req::Dict)
         (p, o["new_prefix"])
     end
 
-    sort(details, rev = true)
+    return sort(details, rev = true)
 end
 
 macro inittabnine!()
