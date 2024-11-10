@@ -30,6 +30,8 @@ julia> using TabNineCompletion
 
 julia> @enabletabnine!
 
-julia> using Bench # Press <TAB> here
+julia> # This is a com # Press <TAB> here. This should output comment.
+
+julia> using Bench # Press <TAB> here. This should output Benchmark
 ```
 
