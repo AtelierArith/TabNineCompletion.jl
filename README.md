@@ -23,12 +23,12 @@ $ julia -e 'using Pkg; Pkg.activate("."); Pkg.build()'
 
 ## How to use
 
-### Call `@inittabnine!`
+### Call `@enabletabnine!`
 
 ```julia-repl
 julia> using TabNineCompletion
 
-julia> @inittabnine!
+julia> @enabletabnine!
 
 julia> using Bench # Press <TAB> here
 ```
