@@ -1,6 +1,7 @@
 module TabNineCompletion
 
-export @inittabnine!
+export @enabletabnine!, @disabletabnine!
+export enable_load_logs_repl_history!, disable_load_logs_repl_history!
 
 import REPL
 
@@ -19,7 +20,9 @@ function TabNineClient(tnpath::AbstractString)
     inp = Base.PipeEndpoint()
     out = Base.PipeEndpoint()
     err = Base.PipeEndpoint()
-    @assert isfile(tnpath)
+    if !isfile(tnpath)
+        error("Could not find TabNine executable.")
+    end
     c = `$(tnpath)`
 
     tabnineproc = run(c, inp, out, err, wait = false)
@@ -27,6 +30,7 @@ function TabNineClient(tnpath::AbstractString)
 end
 
 const tabnineclient = Ref{TabNineClient}()
+const load_logs_repl_history = Ref{Bool}(false)
 
 function send(client::TabNineClient, req::Dict)
     inputd = Dict("version" => "2.0.2", "request" => req)
@@ -46,7 +50,15 @@ function send(client::TabNineClient, req::Dict)
     return sort(details, rev = true)
 end
 
-macro inittabnine!()
+function enable_load_logs_repl_history!()
+    load_logs_repl_history[] = true
+end
+
+function disable_load_logs_repl_history!()
+    load_logs_repl_history[] = false
+end
+
+macro enabletabnine!()
     tabninepath = Base.contractuser(get_tabnine_path())
     @info "Launch tabnine process..." tabninepath
     tabnineclient[] = TabNineClient(expanduser(tabninepath))
@@ -67,8 +79,11 @@ macro inittabnine!()
                 return OriginalREPLCompletions._completions(string, pos, context_module, shift, hint)
             end
             after = ""
-            #filename = joinpath(Base.DEPOT_PATH[1], "logs", "repl_history.jl")
-            filename = nothing
+            if load_logs_repl_history[]
+                filename = joinpath(Base.DEPOT_PATH[1], "logs", "repl_history.jl")
+            else
+                filename = nothing
+            end
             req = Dict(
                 "Autocomplete" => Dict(
                     "before" => rstrip(before),
@@ -115,9 +130,30 @@ macro inittabnine!()
                 catch
                     # My TabNineCompletion fails.
                     # Fall back to the original implementation
-                    return OriginalREPLCompletions._completions(string, pos, context_module, shift, hint)
+                    #eturn OriginalREPLCompletions._completions(string, pos, context_module, shift, hint)
                 end
             end
+        end
+    end
+end
+
+macro inittabnine!()
+    esc(:(@enabletabnine!))
+end
+
+Base.@deprecate var"@inittabnine!" var"@enabletabnine!"
+
+macro disabletabnine!()
+    disable_load_logs_repl_history!()
+    @eval begin
+        function REPL.REPLCompletions.completions(
+            string::String,
+            pos::Int,
+            context_module::Module = Main,
+            shift::Bool = true,
+            hint::Bool = false,
+        )
+            OriginalREPLCompletions._completions(string, pos, context_module, shift, hint)
         end
     end
 end

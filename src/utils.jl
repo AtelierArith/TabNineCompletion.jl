@@ -38,7 +38,11 @@ function get_tabnine_path()
     platform = translation[platform_key]
 
     active_path = joinpath(pkgdir(@__MODULE__)::String, "deps", "binaries")
-    v = sort(VersionNumber.(readdir(active_path)), rev = true) |> first |> string
-    path = joinpath(active_path, v, platform)
+    path = try
+        v = sort(VersionNumber.(readdir(active_path)), rev = true) |> first |> string
+        path = joinpath(active_path, v, platform)
+    catch
+        error("Could not find TabNine executable. Please run `using Pkg; Pkg.build()` to download TabNine backend.")
+    end
     return path
 end
